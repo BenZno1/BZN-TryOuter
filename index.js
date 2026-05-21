@@ -140,12 +140,23 @@ client.on("interactionCreate", async (interaction) => {
     });
   }
 
-  if (interaction.isStringSelectMenu()) {
+if (interaction.isStringSelectMenu()) {
     const parts = interaction.customId.split("_");
     const tryoutIndex = parseInt(parts[1]);
     const sid = parts.slice(2).join("_");
-    const session = sessions.get(sid);
-    if (!session) return interaction.reply({ content: "❌ Session expired. Run /tryout again.", ephemeral: true });
+    let session = sessions.get(sid);
+    if (!session) {
+      session = {
+        id: sid,
+        targetUser: await interaction.guild.members.fetch(
+          interaction.message.embeds[0].fields[0].value.replace(/[<@>]/g, "")
+        ).then(m => m.user),
+        evaluatorTag: interaction.user.tag,
+        tryouts: { 1: null, 2: null, 3: null },
+        result: null,
+      };
+      sessions.set(sid, session);
+    }
     session.tryouts[tryoutIndex] = interaction.values[0];
     await interaction.update({ embeds: [buildTryoutEmbed(session)], components: buildComponents(session) });
   }
