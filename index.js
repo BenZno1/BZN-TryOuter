@@ -1,6 +1,7 @@
 const {
   Client,
   GatewayIntentBits,
+  Partials,
   SlashCommandBuilder,
   ActionRowBuilder,
   ButtonBuilder,
@@ -222,14 +223,15 @@ async function handleDMRoleReply(message, session) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+const { Partials } = require("discord.js");
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.DirectMessages, // needed to receive DMs
-    GatewayIntentBits.MessageContent,  // needed to read message content
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.MessageContent,
   ],
-  // Required for DMs to work with discord.js v14
-  partials: ["CHANNEL"],
+  partials: [Partials.Channel, Partials.Message],
 });
 
 client.once("ready", () => {
@@ -241,7 +243,6 @@ client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
 
   // Only handle DMs
-  const { DMChannel } = require("discord.js");
   if (message.channel.type !== 1) return; // 1 = DM channel type
 
   // Check if there's a pending role selection session
