@@ -244,14 +244,6 @@ client.on("messageCreate", async (message) => {
   const { DMChannel } = require("discord.js");
   if (message.channel.type !== 1) return; // 1 = DM channel type
 
-  // Debug: reply to every DM so we know the bot is receiving messages
-  await message.channel.send(`📨 Got your message! Your ID: \`${message.author.id}\` | Expected: \`${YOUR_USER_ID}\``);
-
-  // Only respond to the owner
-  if (message.author.id !== YOUR_USER_ID) {
-    return message.channel.send("❌ You are not authorised to use this bot.");
-  }
-
   // Check if there's a pending role selection session
   const session = roleSessions.get(message.author.id);
   if (session) {
