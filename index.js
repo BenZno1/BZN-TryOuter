@@ -223,8 +223,6 @@ async function handleDMRoleReply(message, session) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-const { Partials } = require("discord.js");
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
